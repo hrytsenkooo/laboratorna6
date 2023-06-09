@@ -6,26 +6,8 @@ int main() {
     int size;
     std::cin >> size;
 
-    std::cout << "Enter the type of data (1 for int, 2 for double, 3 for string): ";
-    int datachoice;
-    std::cin >> datachoice;
-
     HashTable<std::string> table(size);
-    if (datachoice == 1) {
-        HashTable<int> table(size);
-    }
-    else if (datachoice == 2) {
-        HashTable<double> table(size);
-    }
-    else if (datachoice == 3) {
-        HashTable<std::string> table(size);
-    }
-    else {
-        std::cout << "Invalid data type choice. " << std::endl;
-        return 0;
-    }
-
-
+   
     int choice;
     do {
         displayMenu();
@@ -34,6 +16,11 @@ int main() {
 
         switch (choice) {
         case 1: {
+            if (table.count == size) {
+                std::cout << "Table is full. Cannot insert more elements." << std::endl;
+                break;
+            }
+
             int numElements;
             std::cout << "Enter the number of elements to insert: ";
             std::cin >> numElements;
@@ -41,22 +28,27 @@ int main() {
                 std::cout << "Too much elements to insert" << std::endl;
                 break;
             }
-            else if (table.count == size) {
-                std::cout << "Table is full. Cannot insert more elements." << std::endl;
+            else if (table.count + numElements > size) {
+                std::cout << "Too much elements to insert" << std::endl;
                 break;
             }
 
             int count = 0;
             while (count < numElements) {
-                int key;
-                std::string value;
-                std::cout << "Enter a key: ";
-                std::cin >> key;
-                std::cout << "Enter a value: ";
-                std::cin.ignore();
-                std::getline(std::cin, value);
-                table.insert(key, value);
-                count++;
+                try {
+                    int key;
+                    std::string value;
+                    std::cout << "Enter a key: ";
+                    std::cin >> key;
+                    std::cout << "Enter a value: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, value);
+                    table.insert(key, value);
+                    count++;
+                }
+                catch (const std::runtime_error& e) {
+                    std::cout << "Exception occurred: " << e.what() << std::endl;
+                }
             }
 
             std::cout << "Elements inserted." << std::endl;
@@ -120,4 +112,4 @@ int main() {
     } while (choice != 0);
 
     return 0;
-}
+};
