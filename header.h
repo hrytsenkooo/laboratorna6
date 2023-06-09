@@ -9,13 +9,15 @@ private:
     T* data;
     int* keys;
     bool* used;
-
     int hash(int key);
 
 public:
+    int count = 0;
     HashTable(int size);
 
     ~HashTable();
+
+    void clear();
 
     void insert(int key, T element);
 
