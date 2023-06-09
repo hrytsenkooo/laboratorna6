@@ -6,7 +6,24 @@ int main() {
     int size;
     std::cin >> size;
 
+    std::cout << "Enter the type of data (1 for int, 2 for double, 3 for string): ";
+    int datachoice;
+    std::cin >> datachoice;
+
     HashTable<std::string> table(size);
+    if (datachoice == 1) {
+        HashTable<int> table(size);
+    }
+    else if (datachoice == 2) {
+        HashTable<double> table(size);
+    }
+    else if (datachoice == 3) {
+        HashTable<std::string> table(size);
+    }
+    else {
+        std::cout << "Invalid data type choice. " << std::endl;
+        return 0;
+    }
 
 
     int choice;
@@ -21,7 +38,11 @@ int main() {
             std::cout << "Enter the number of elements to insert: ";
             std::cin >> numElements;
             if (numElements > size) {
-                std::cout << "Too much elements" << std::endl;
+                std::cout << "Too much elements to insert" << std::endl;
+                break;
+            }
+            else if (table.count == size) {
+                std::cout << "Table is full. Cannot insert more elements." << std::endl;
                 break;
             }
 
@@ -34,21 +55,16 @@ int main() {
                 std::cout << "Enter a value: ";
                 std::cin.ignore();
                 std::getline(std::cin, value);
-
-                try {
-                    table.insert(key, value);
-                    count++;
-                }
-                catch (std::runtime_error& e) {
-                    std::cout << e.what() << std::endl;
-                }
+                table.insert(key, value);
+                count++;
             }
+
             std::cout << "Elements inserted." << std::endl;
             break;
         }
         case 2: {
             if (table.iterator().hasNext()) {
-                table = HashTable<std::string>(size);
+                table.clear();
                 std::cout << "Table cleared." << std::endl;
             }
             else {
@@ -65,7 +81,7 @@ int main() {
                     std::string searchResult = table.search(searchKey);
                     std::cout << "Search result: " << searchResult << std::endl;
                 }
-                catch (std::runtime_error& e) {
+                catch (const std::runtime_error& e) {
                     std::cout << e.what() << std::endl;
                 }
             }
