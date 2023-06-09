@@ -35,7 +35,10 @@ void HashTable<T>::insert(int key, T element) {
             throw std::runtime_error("Element with the same key already exists in the table.");
         }
         index = (index + 1) % size;
-    } 
+        if (index == hash(key)) {
+            throw std::runtime_error("Table is full. Cannot insert more elements.");
+        }
+    }
 
     keys[index] = key;
     data[index] = element;
@@ -130,7 +133,3 @@ void displayMenu() {
     std::cout << "0) Exit" << std::endl;
     std::cout << "================\n" << std::endl;
 }
-
-template class HashTable<int>;
-template class HashTable<double>;
-template class HashTable<std::string>;
