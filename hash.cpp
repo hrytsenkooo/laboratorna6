@@ -1,10 +1,10 @@
 #include "header.h"
 
 template<class T>
-
 int HashTable<T>::hash(int key) {
     return key % size;
 }
+
 template<class T>
 HashTable<T>::HashTable(int size) {
     this->size = size;
@@ -25,13 +25,6 @@ HashTable<T>::~HashTable() {
 
 template<class T>
 void HashTable<T>::insert(int key, T element) {
-    int count = 0;
-    for (int i = 0; i < size; i++) {
-        if (used[i]) {
-            count++;
-        }
-    }
-
     if (count == size) {
         throw std::runtime_error("Table is full. Cannot insert more elements.");
     }
@@ -42,20 +35,27 @@ void HashTable<T>::insert(int key, T element) {
             throw std::runtime_error("Element with the same key already exists in the table.");
         }
         index = (index + 1) % size;
-    }
+    } 
+
     keys[index] = key;
     data[index] = element;
     used[index] = true;
+    count++;
 }
 
 template<class T>
 T HashTable<T>::search(int key) {
     int index = hash(key);
+    int iterations = 0;
     while (used[index]) {
         if (keys[index] == key) {
             return data[index];
         }
         index = (index + 1) % size;
+        iterations++;
+        if (iterations > size) {
+            throw std::runtime_error("Key not found.");
+        }
     }
     throw std::runtime_error("Key not found.");
 }
@@ -66,6 +66,7 @@ void HashTable<T>::remove(int key) {
     while (used[index]) {
         if (keys[index] == key) {
             used[index] = false;
+            count--;
             return;
         }
         index = (index + 1) % size;
@@ -73,6 +74,13 @@ void HashTable<T>::remove(int key) {
     throw std::runtime_error("Key not found.");
 }
 
+template<class T>
+void HashTable<T>::clear() {
+    for (int i = 0; i < size; i++) {
+        used[i] = false;
+    }
+    count = 0;
+}
 template<class T>
 HashTable<T>::Iterator::Iterator(T* data, int* keys, bool* used, int size) {
     this->current = data;
@@ -122,3 +130,7 @@ void displayMenu() {
     std::cout << "0) Exit" << std::endl;
     std::cout << "================\n" << std::endl;
 }
+
+template class HashTable<int>;
+template class HashTable<double>;
+template class HashTable<std::string>;
